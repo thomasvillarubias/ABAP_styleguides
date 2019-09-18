@@ -2,7 +2,15 @@
 ---
 
 @import "{{ site.theme }}";
+@import url('https://fonts.googleapis.com/css?family=Alegreya:400,400i,500,500i,700,700i,800,800i,900,900i&display=swap');
 
-p.view, footer {
+p.view, footer, header {
   display: none !important;
+}
+
+section {
+    width: 90% !important;
+    color: #333333 !important;
+    font-family: 'Alegreya',sans-serif !important;
+    font-size: 1.3rem !important;
 }
