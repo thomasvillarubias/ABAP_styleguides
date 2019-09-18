@@ -54,7 +54,7 @@ The [Cheat Sheet](cheat-sheet/CheatSheet.md) is a print-optimized version.
   - [Avoid unnecessary table reads](#avoid-unnecessary-table-reads)
 - [Strings](#strings)
   - [Use ` to define literals](#use--to-define-literals)
-  - [Use \| to assemble texts](#use--to-assemble-text)
+  - [Use \| to assemble text](#use--to-assemble-text)
 - [Booleans](#booleans)
   - [Use Booleans wisely](#use-booleans-wisely)
   - [Use ABAP_BOOL for Booleans](#use-abap_bool-for-booleans)
