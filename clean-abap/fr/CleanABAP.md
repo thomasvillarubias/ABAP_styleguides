@@ -1,4 +1,5 @@
-TO BE TRANSLATED / À TRADUIRE
+1. TO BE TRANSLATED / À TRADUIRE
+2. À Adapter
 
 # L'ABAP propre
 
@@ -38,7 +39,7 @@ La [Cheat Sheet](cheat-sheet/CheatSheet.md) en est une version optimisée pour l
   - [Éviter les éléments de langage obsolètes](#avoid-obsolete-language-elements)
   - [Utiliser les _design patterns_ judicieusement](#use-design-patterns-wisely)
 - [Constantes](#constants)
-  - [Utiliser des constants à des _nombres magiques_](#use-constants-instead-of-magic-numbers)
+  - [Utiliser des constants plutôt que des _nombres magiques_](#use-constants-instead-of-magic-numbers)
   - [Préférer des classes d'énumération à des interfaces de constantes](#prefer-enumeration-classes-to-constants-interfaces)
   - [Si l'on n'utilise pas de classes d'énumération, grouper les constantes](#if-you-dont-use-enumeration-classes-group-your-constants)
 - [Variables](#variables)
@@ -55,7 +56,7 @@ La [Cheat Sheet](cheat-sheet/CheatSheet.md) en est une version optimisée pour l
   - [Préférer `LOOP AT WHERE` à des `IF` imbriqués](#prefer-loop-at-where-to-nested-if)
   - [Éviter les lectures de tables inutiles](#avoid-unnecessary-table-reads)
 - [_Strings_](#strings)
-  - [Utiliser ` pour définir des chaînes immuables](#use--to-define-literals)
+  - [Utiliser \` pour définir des chaînes immuables](#use--to-define-literals)
   - [Utiliser \| pour assembler du texte](#use--to-assemble-text)
 - [Booléens](#booleans)
   - [Utiliser les Booléens judicieusement](#use-booleans-wisely)
@@ -580,15 +581,15 @@ En fait, nous pensons qu'une telle approche aura un effet positif non négligeab
 car il en résultera un effort d'optimisation plus ciblé, et donc il sera plus simple d'identifier
 les goulots d'étranglement, et plus simple de refactoriser et optimiser du code bien structuré.
 
-### Prefer object orientation to procedural programming
+### Préférer l'orienté objet à la programme procédurale
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Language](#language) > [Cette section](#prefer-object-orientation-to-procedural-programming)
 
-Object-oriented programs (classes, interfaces) are segmented better
-and can be refactored and tested more easily than procedural code (functions, programs).
-Although there are situations where you must provide procedural objects
-(a function for an RFC, a program for a transaction),
-these objects should do little more than call a corresponding class that provides the actual feature:
+Les développements orientés objets (classes, interfaces) sont mieux segmentés
+et peuvent être refactorisés et testés plus facilement que le code procédural (fonctions, programmes).
+Bien qu'il y ait des situations où il est obligatoire d'utiliser des objets procéduraux
+(une fonction RFC, un programme pour une transaction),
+ces objets ne devraient rien faire d'autre qu'appeler une classe qui fournira la fonctionnalité:
 
 ```ABAP
 FUNCTION check_business_partner [...].
@@ -600,11 +601,11 @@ ENDFUNCTION.
 > [Function Groups vs. Classes](sub-sections/FunctionGroupsVsClasses.md)
 > describes the differences in detail.
 
-### Prefer functional to procedural language constructs
+### Préférer les constructions fonctionnelles à procédurales
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Language](#language) > [Cette section](#prefer-functional-to-procedural-language-constructs)
 
-They are usually shorter and come more natural to modern programmers.
+Elles sont généralement plus courtes et sonnent mieux pour les développeurs modernes.
 
 ```ABAP
 DATA(variable) = 'A'.
@@ -634,19 +635,19 @@ IF line_exists( value_pairs[ name = 'A' ] ).
 " DATA(exists) = xsdbool( sy-subrc = 0 ).
 ```
 
-Many of the detailed rules below are just specific reiterations of this general advice.
+La plupart des règles détaillées ci-après sont des répétitions spécifiques de ce conseil général.
 
-### Avoid obsolete language elements
+### Éviter les éléments de langage obsolètes
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Language](#language) > [Cette section](#avoid-obsolete-language-elements)
 
-When upgrading your ABAP version,
-make sure to check for obsolete language elements
-and refrain from using them.
+Lorsque vous mettez à jour votre version ABAP,
+assurez-vous de contrôler les éléments de langage obsolètes
+et évitez de les utilisr.
 
-For example, the `@`-escaped "host" variables
-in the following statement make a little clearer
-what's a program variable and what's a column in the database,
+Par exemple, les variables hôtes échapées avec `@`
+dans l'instruction suivante font apparaitre plus clairement
+ce qui est une variable du programme et ce qui est un champ de la base de données,
 
 ```ABAP
 SELECT *
@@ -656,7 +657,7 @@ SELECT *
   INTO TABLE @itab.
 ```
 
-as compared to the [obsolete unescaped form](https://help.sap.com/doc/abapdocu_750_index_htm/7.50/en-US/abenopen_sql_hostvar_obsolete.htm)
+comparé à la [version obsolète non échapée](https://help.sap.com/doc/abapdocu_750_index_htm/7.50/en-US/abenopen_sql_hostvar_obsolete.htm)
 
 ```ABAP
 SELECT *
@@ -666,36 +667,35 @@ SELECT *
   INTO TABLE itab.
 ```
 
-Newer alternatives tend to improve readability of the code,
-and reduce design conflicts with modern programming paradigms,
-such that switching to them can automatically clean your code.
+Les nouvelles alternatives tendent à améliorer la lisibilité du code,
+et à réduire les conflits de conception avec des paradigmes de programmation modernes,
+de sorte que les appliquer pourra automatiquement nettoyer votre code.
 
-While continuing to work, obsolete elements may stop benefitting
-from optimizations in terms of processing speed and memory consumption.
+Même s'ils fonctionnent toujours, les éléments obsolètes pourraient ne plus bénéficier
+de futures optimisations en terme de temps de traitement et de consommation de mémoire.
 
-With modern language elements, you can onboard young ABAPers easier,
-who may no longer be familiar with the outdated constructs
-because they are no longer taught in SAP's trainings.
+Utiliser les éléments de langages modernes, permet d'intégrer les ABAPeurs juniors plus facilement,
+car les anciennes versions ne sont plus abordées par les formations SAP.
 
-The SAP NetWeaver documentation contains a stable section
-that lists obsolete language elements, for example
+La documentation SAP NetWeaver contient une section qui 
+liste les éléments de langage obsolètes, par exemple
 [NW 7.50](https://help.sap.com/doc/abapdocu_750_index_htm/7.50/en-US/index.htm?file=abenabap_obsolete.htm),
 [NW 7.51](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/index.htm?file=abenabap_obsolete.htm),
 [NW 7.52](https://help.sap.com/doc/abapdocu_752_index_htm/7.52/en-US/index.htm?file=abenabap_obsolete.htm),
 [NW 7.53](https://help.sap.com/doc/abapdocu_753_index_htm/7.53/en-US/index.htm?file=abenabap_obsolete.htm).
 
-### Use design patterns wisely
+### Utiliser les _design patterns_ judicieusement
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Language](#language) > [Cette section](#use-design-patterns-wisely)
 
-Where they are appropriate and provide noticeable benefit.
-Don't apply design patterns everywhere just for the sake of it.
+C'est-à-dire là où ils sont appropriés et apporte un bénéfice réel.
+N'utilisez pas de _design patterns_ n'importe où juste par principe.
 
-## Constants
+## Constantes
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Cette section](#constants)
 
-### Use constants instead of magic numbers
+### Utiliser des constants plutôt que des _nombres magiques_
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Constants](#constants) > [Cette section](#use-constants-instead-of-magic-numbers)
 
@@ -703,7 +703,7 @@ Don't apply design patterns everywhere just for the sake of it.
 IF abap_type = cl_abap_typedescr=>typekind_date.
 ```
 
-is clearer than
+est plus clair que
 
 ```ABAP
 " anti-pattern
@@ -713,7 +713,7 @@ IF abap_type = 'D'.
 > Voir _Chapter 17: Smells and Heuristics: G25:
 > Replace Magic Numbers with Named Constants_ of [Robert C. Martin's _Clean Code_].
 
-### Prefer enumeration classes to constants interfaces
+### Préférer des classes d'énumération à des interfaces de constantes
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Constants](#constants) > [Cette section](#prefer-enumeration-classes-to-constants-interfaces)
 
@@ -726,7 +726,7 @@ CLASS /clean/message_severity DEFINITION PUBLIC ABSTRACT FINAL.
 ENDCLASS.
 ```
 
-or
+ou
 
 ```ABAP
 CLASS /clean/message_severity DEFINITION PUBLIC CREATE PRIVATE FINAL.
@@ -738,7 +738,7 @@ CLASS /clean/message_severity DEFINITION PUBLIC CREATE PRIVATE FINAL.
 ENDCLASS.
 ```
 
-instead of mixing unrelated things
+au lieu de mélanger des choses qui n'ont rien à voir entre elles
 
 ```ABAP
 " anti-pattern
@@ -752,16 +752,16 @@ ENDINTERFACE.
 ```
 
 > [Enumerations](sub-sections/Enumerations.md)
-> describes common enumeration patterns
-> and discusses their advantages and disadvantages.
+> décrit des modèles communs d'énumération
+> et traite de leurs avantages et inconvénients.
 >
 > Voir _Chapter 17: Smells and Heuristics: J3: Constants versus Enums_ of [Robert C. Martin's _Clean Code_].
 
-### If you don't use enumeration classes, group your constants
+### Si l'on n'utilise pas de classes d'énumération, grouper les constantes
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Constants](#constants) > [Cette section](#if-you-dont-use-enumeration-classes-group-your-constants)
 
-If you collect constants in a loose way, for example in an interface, group them:
+Si vous réunissez les constantes de manière légère, par exemple dans une interface, regroupez-les :
 
 ```ABAP
 CONSTANTS:
@@ -775,7 +775,7 @@ CONSTANTS:
   END OF message_lifespan.
 ```
 
-Makes the relation clearer than:
+Ce qui rend les relations entre constantes plus claires que :
 
 ```ABAP
 CONSTANTS:
@@ -785,7 +785,7 @@ CONSTANTS:
   persisted    TYPE i       VALUE 2,
 ```
 
-The group also allows you group-wise access, for example for input validation:
+Le regroupement vous permet également un accès _groupé_, par exemple pour une validation d'_inputs_ :
 
 ```ABAP
 DO number_of_constants TIMES.
@@ -803,12 +803,12 @@ ENDWHILE.
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Cette section](#variables)
 
-### Prefer inline to up-front declarations
+### Préférer les déclarations _inline_ plutôt qu'en blocs _data_
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Variables](#variables) > [Cette section](#prefer-inline-to-up-front-declarations)
 
-If you follow these guidelines, your methods will become so short (3-5 statements)
-that declaring variables inline at first occurrence will look more natural
+Si vous suivez ces conseils, vos méthodes vont devenir tellement courtes (3 à 5 instructions)
+que déclarer les variables en ligne, lors de leur première occurrence paraitra plus naturel
 
 ```ABAP
 METHOD do_something.
@@ -818,7 +818,7 @@ METHOD do_something.
 ENDMETHOD.
 ```
 
-than declaring variables with a separate `DATA` section at the beginning of the method
+que déclarer les variables dans une section `DATA` à part au début de la méthode
 
 ```ABAP
 " anti-pattern
@@ -834,7 +834,7 @@ ENDMETHOD.
 
 > Voir _Chapter 5: Formatting: Vertical Distance: Variable Declarations_ of [Robert C. Martin's _Clean Code_].
 
-### Don't declare inline in optional branches
+### Ne pas utiliser les déclarations _inline_ dans des branches optionnelles
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Variables](#variables) > [Cette section](#dont-declare-inline-in-optional-branches)
 
@@ -847,10 +847,10 @@ ELSE.
 ENDIF.
 ```
 
-This works fine because ABAP handles inline declarations as if they were at the beginning of the method.
-However, it is extremely confusing for readers,
-especially if the method is longer and you don't spot the declaration right away.
-In this case, break with inlining and put the declaration up-front:
+Cela fonctionne bien car l'ABAP gère les déclarations en ligne comme si elles étaient en début de méthode.
+Cependant, c'est extrêmement confus pour les lecteurs,
+en particulier lorsque la méthode est plus longue et que l'on ne détecte pas la déclaration tout de suite.
+Dans ce cas, n'utilisez pas la déclaration en ligne mais mettez là plus haut :
 
 ```ABAP
 DATA value TYPE i.
@@ -863,7 +863,7 @@ ENDIF.
 
 > Voir _Chapter 5: Formatting: Vertical Distance: Variable Declarations_ of [Robert C. Martin's _Clean Code_].
 
-### Do not chain up-front declarations
+### Ne pas chaîner les déclarations _data_
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Variables](#variables) > [Cette section](#do-not-chain-up-front-declarations)
 
@@ -872,14 +872,14 @@ DATA name TYPE seoclsname
 DATA reader TYPE REF TO /dirty/reader.
 ```
 
-Chaining suggests the defined variables are related on a logical level.
-To consistently use it, you would have to ensure that all chained variables belong together,
-and introduce additional chain groups to add variables.
-While this is possible, it is usually not worth the effort.
+Chaîner suggère que les variables sont liées à un niveau logique.
+Pour le faire de façon cohérente, vous devez vous assurer que toutes les variables liées sont effectivement groupées entre elles,
+et ajouter un nouveau groupe de chaines pour déclarer de nouvelles variables.
+Bien que ce soit possible, cela n'en vaut généralement pas la peine.
 
-Chaining also needlessly complicates reformatting and refactoring
-because each line looks different and changing them requires meddling with
-colons, dots, and commas, that are not worth the effort.
+En outre, chaîner complique inutilement le formatage et la refactorisation
+car chaque ligne apparait différemment et les modifier requiert de s'enquiquiner avec les virgules,
+les points, les deux-points...
 
 ```ABAP
 " anti-pattern
@@ -888,9 +888,9 @@ DATA:
   reader TYPE REF TO /dirty/reader.
 ```
 
-> Also refer to [Don't align type clauses](#dont-align-type-clauses)
+> Voir [Don't align type clauses](#dont-align-type-clauses)
 
-### Prefer REF TO to FIELD-SYMBOL
+### Préférer `REF TO` à `FIELD-SYMBOL`
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Variables](#variables) > [Cette section](#prefer-ref-to-to-field-symbol)
 
@@ -898,14 +898,14 @@ DATA:
 LOOP AT components REFERENCE INTO DATA(component).
 ```
 
-instead of the equivalent
+au lieu de l'équivalent
 
 ```ABAP
 " anti-pattern
 LOOP AT components ASSIGNING FIELD-SYMBOL(<component>).
 ```
 
-except where you need field symbols
+sauf si vous avez **besoin** de _field symbols_
 
 ```ABAP
 ASSIGN generic->* TO FIELD-SYMBOL(<generic>).
@@ -913,57 +913,59 @@ ASSIGN COMPONENT name OF STRUCTURE structure TO FIELD-SYMBOL(<component>).
 ASSIGN (class_name)=>(static_member) TO FIELD-SYMBOL(<member>).
 ```
 
-Code reviews demonstrate that people tend to choose between the two arbitrarily,
-"just because", "because we are always LOOPing that way", or "for no special reason".
-Arbitrary choices make the reader waste time on the pointless question why one is used over the other
-and thus should be replaced with well-founded, precise decisions.
-Our recommendation is based on this reasoning:
+Les revues de code ont démontré que les gens tendent à choisir entre les deux de façon arbitrairement,
+"comme ça", "parce qu'on fait toujours les boucles comme ça", ou "sans raison particulière".
+Les choix arbitraires font perdre du temps au lecteur, sur l'interrogation futile de pourquoi l'une
+plutôt que l'autre façon de faire, et donc ils doivent être remplacés par des décisions précises et
+basées sur des faits.
+Notre recommandation se base sur la logique suivante :
 
-- Field symbols can do some things that references cannot, such as dynamically accessing the components of a structure.
-Likewise, references can do things that field symbols can't, such as constructing a dynamically typed data structure.
-In summary, settling for one alone is not possible.
+- Les _field symbols_ peuvent faire des choses que les références ne peuvent pas faire, comme accéder dynamiquement aux composants d'un structure.
+De la même façon, les références peuvent faire des choses que les _field symbols_ ne peuvent pas faire, comme construire une structure typée dynamiquement.
+En résumé, n'utiliser que l'un des deux n'est pas possible.
 
-- In object-oriented ABAP, references are all over the place and cannot be avoided,
-as any object is a `REF TO <class-name>`.
-In contrast, field symbols are only strictly required in few, special cases concerned with dynamic typing.
-References thus form a natural preference in any object-oriented program.
+- En ABAP orienté objetm les références sont partout et ne peuvent être évitées,
+car tout objet est une `REF TO <class-name>`.
+À contrario, les _field symbols_ sont strictement uniquement requis dans quelques cas spéciaux, relatifs au typage dynamique.
+De fait, les références forment une préférence naturelle dans tout programme orienté objet.
 
-- Field symbols are shorter than references, but the resulting memory saving is so tiny that it can be safely neglected.
-Similarly, speed is not an issue. As a consequence, there is no performance-related reason to prefer one to the other.
+- Les _field symbols_ sont plus légers que les références, mais la mémoire économisée ainsi est si insignifiante qu'elle peut être négligée sans risque.
+De la même façon, la vitesse n'est pas un souci. En conséquence, d'un point de vue performance, il n'y a aucune raison à préférer l'un plutôt que l'autre.
 
-> Voir the article
+> Voir
 > [_Accessing Data Objects Dynamically_ in the ABAP Programming Guidelines](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/index.htm?file=abendyn_access_data_obj_guidl.htm).
 
 ## Tables
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Cette section](#tables)
 
-### Use the right table type
+### Utiliser le bon type de table
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Tables](#tables) > [Cette section](#use-the-right-table-type)
 
-- You typically use `HASHED` tables for **large tables**
-that are **filled in a single step**, **never modified**, and **read often by their key**.
-Their inherent memory and processing overhead makes hash tables only valuable
-for large amounts of data and lots of read accesses.
-Each change to the table's content requires expensive recalculation of the hash,
-so don't use this for tables that are modified too often.
+- Typiquement, vous devez utiliser les tables `HASHED` pour de **grandes tables**
+qui sont **alimentées en une seule étape**, **jamais modifiées** et **souvent lues par leur clé**.
+Leur fonctionnement intrinsèque en terme de mémoire et de traitement rend les tables hashées intéressantes uniquement
+pour de grands volumes de données avec beaucoup d'accès en lecture.
+Chaque modification du contenu de la table requiert un recalcul coûteux du hash,
+donc n'utilisez pas ce type de table pour des tables qui sont modifiées trop souvent.
 
-- You typically use `SORTED` tables for **large tables**
-that need to be **sorted at all times**, that are **filled bit by bit** or **need to be modified**,
-and **read often by one or more full or partial keys** or processed **in a certain order**.
-Adding, changing, or removing content requires finding the right insertion spot,
-but doesn't require adjusting the rest of the table's index.
-Sorted tables demonstrate their value only for large numbers of read accesses.
+- Vous devez utiliser les tables `SORTED` pour de **grandes tables** qui ont besoin
+d'être **triées en permanence**, qui sont **alimentées petit à petit** ou ont 
+**besoin d'être modifiées** et **lues souvent sur une clé complète ou partielle**,
+ou **manipulées selon un certain ordre**.
+Ajouter, modifier ou supprimer du contenu requiert de trouver le bon emplacement
+mais ne requiert pas d'ajuster le reste de l'index de la table.
+Les tables triées ne se révèlent intéressantes que pour un grand nombres d'accès en lecture.
 
-- Use `STANDARD` tables for **small tables**, where indexing produces more overhead than benefit,
-and **"arrays"**, where you either don't care at all for the order of the rows,
-or you want to process them in exactly the order they were appended.
+- Utilisez les tables `STANDARD` pour les **petites tables**, pour lesquelles avoir une indexation
+produirait plus de sur-traitements que de bénéfices, et pour des **listes** pour lesquelles vous ne vous préoccupez pas de l'ordre,
+ou que vous voulez traiter dans l'ordre exact où elles ont été alimentées.
 
-> These are only rough guidelines.
-> Find more details in the article [_Selection of Table Category_ in the ABAP Language Help](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/abenitab_kind.htm).
+> Ce ne sont que des conseils bruts.
+> Plus de détails ici [_Selection of Table Category_ in the ABAP Language Help](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/abenitab_kind.htm).
 
-### Avoid DEFAULT KEY
+### Éviter `DEFAULT KEY`
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Tables](#tables) > [Cette section](#avoid-default-key)
 
@@ -972,39 +974,38 @@ or you want to process them in exactly the order they were appended.
 DATA itab TYPE STANDARD TABLE OF row_type WITH DEFAULT KEY.
 ```
 
-Default keys are often only added to get the newer functional statements working.
-The keys themselves in fact are usually superfluous and waste resources for nothing.
-They can even lead to obscure mistakes because they ignore numeric data types.
+Les clés par défaut sont souvent ajoutées juste pour faire fonctionner les nouvelles syntaxes et instructions.
+Les clés elles-mêmes sont en fait habituellement superflues et gâchent des ressources pour rien.
+Cela peut même entraîner des erreurs obscures, car elles ignorent les types de données numériques.
 
-Either specify the key components explicitly
+Soit vous spécifiez les composants de la clé explicitement
 
 ```ABAP
 DATA itab2 TYPE STANDARD TABLE OF row_type WITH NON-UNIQUE KEY comp1 comp2.
 ```
 
-or resort to `EMPTY KEY` if you don't need a key at all.
+soit vous utilisez `EMPTY KEY` si vous n'avez pas besoin de clé du tout.
 
 ```ABAP
 DATA itab1 TYPE STANDARD TABLE OF row_type WITH EMPTY KEY.
 ```
 
-> Following [Horst Keller's blog on _Internal Tables with Empty Key_](https://blogs.sap.com/2013/06/27/abap-news-for-release-740-internal-tables-with-empty-key/)
+> Voir [Horst Keller's blog on _Internal Tables with Empty Key_](https://blogs.sap.com/2013/06/27/abap-news-for-release-740-internal-tables-with-empty-key/)
 
-### Prefer INSERT INTO TABLE to APPEND TO
-
+### Préférer `INSERT INTO TABLE` à `APPEND TO`
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Tables](#tables) > [Cette section](#prefer-insert-into-table-to-append-to)
 
 ```ABAP
 INSERT VALUE #( ... ) INTO TABLE itab.
 ```
 
-`INSERT INTO TABLE` works with all table and key types,
-thus making it easier for you to refactor the table's type and key definitions if your performance requirements change.
+`INSERT INTO TABLE` fonctionne pour toute table et tout type de clé,
+ce qui simplifie la refactorisation en cas de modification du type de table, ou de la définition de la clé, si les besoins en performance évoluent.
 
-Use `APPEND TO` only if you use a `STANDARD` table in an array-like fashion,
-if you want to stress that the added entry shall be the last row.
+Utilisez `APPEND TO` uniquement si vous utilisez une table `STANDARD` en mode liste,
+si vous voulez mettre en évidence le fait que l'entrée ajoutée doit être la dernière.
 
-### Prefer LINE_EXISTS to READ TABLE or LOOP AT
+### Préférer `LINE_EXISTS` à `READ TABLE` ou `LOOP AT`
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Tables](#tables) > [Cette section](#prefer-line_exists-to-read-table-or-loop-at)
 
@@ -1012,7 +1013,7 @@ if you want to stress that the added entry shall be the last row.
 IF line_exists( my_table[ key = 'A' ] ).
 ```
 
-expresses the intent clearer and shorter than
+exprime l'intention plus clairement et de façon plus courte que
 
 ```ABAP
 " anti-pattern
@@ -1020,7 +1021,7 @@ READ TABLE my_table TRANSPORTING NO FIELDS WITH KEY key = 'A'.
 IF sy-subrc = 0.
 ```
 
-or even
+ou pire
 
 ```ABAP
 " anti-pattern
@@ -1030,7 +1031,7 @@ LOOP AT my_table REFERENCE INTO DATA(line) WHERE key = 'A'.
 ENDLOOP.
 ```
 
-### Prefer READ TABLE to LOOP AT
+### Préférer `READ TABLE` à `LOOP AT`
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Tables](#tables) > [Cette section](#prefer-read-table-to-loop-at)
 
@@ -1038,7 +1039,7 @@ ENDLOOP.
 READ TABLE my_table REFERENCE INTO DATA(line) WITH KEY key = 'A'.
 ```
 
-expresses the intent clearer and shorter than
+exprime l'intention plus clairement et de façon plus courte que
 
 ```ABAP
 " anti-pattern
@@ -1047,7 +1048,7 @@ LOOP AT my_table REFERENCE INTO DATA(line) WHERE key = 'A'.
 ENDLOOP.
 ```
 
-or even
+ou même
 
 ```ABAP
 " anti-pattern
@@ -1058,7 +1059,7 @@ LOOP AT my_table REFERENCE INTO DATA(line).
 ENDLOOP.
 ```
 
-### Prefer LOOP AT WHERE to nested IF
+### LOOP AT WHERE` à des `IF` imbriqués
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Tables](#tables) > [Cette section](#prefer-loop-at-where-to-nested-if)
 
@@ -1066,7 +1067,7 @@ ENDLOOP.
 LOOP AT my_table REFERENCE INTO DATA(line) WHERE key = 'A'.
 ```
 
-expresses the intent clearer and shorter than
+exprime l'intention plus clairement et de façon plus courte que
 
 ```ABAP
 LOOP AT my_table REFERENCE INTO DATA(line).
@@ -1076,12 +1077,12 @@ LOOP AT my_table REFERENCE INTO DATA(line).
 ENDLOOP.
 ```
 
-### Avoid unnecessary table reads
+### Éviter les lectures de tables inutiles
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Tables](#tables) > [Cette section](#avoid-unnecessary-table-reads)
 
-In case you _expect_ a row to be there,
-read once and react to the exception,
+Dans le cas où _vous vous attendez_ à ce qu'une ligne soit présente,
+lisez une fois et réagissez à l'exception,
 
 ```ABAP
 TRY.
@@ -1091,8 +1092,8 @@ TRY.
 ENDTRY.
 ```
 
-instead of littering and slowing down
-the main control flow with a double read
+au lieu de gérer l'exception en amont puis de ralentir le flux
+avec une double lecture
 
 ```ABAP
 " anti-pattern
@@ -1102,15 +1103,15 @@ ENDTRY.
 DATA(row) = my_table[ key = input ].
 ```
 
-> Besides being a performance improvement,
-> this is a special variant of the more general
-> [Focus on the happy path or error handling, but not both](#focus-on-the-happy-path-or-error-handling-but-not-both).
+> En plus d'être une amélioration de la performance,
+> c'est une variante particulière du conseil plus général
+> [Se concentrer soit sur le chemin positif soit sur la gestion des erreurs, mais pas les deux](#focus-on-the-happy-path-or-error-handling-but-not-both).
 
 ## Strings
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Cette section](#strings)
 
-### Use ` to define literals
+### Utiliser \` pour définir des chaînes immuables
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Strings](#strings) > [Cette section](#use--to-define-literals)
 
