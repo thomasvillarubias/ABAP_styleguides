@@ -1120,8 +1120,8 @@ CONSTANTS some_constant TYPE string VALUE `ABC`.
 DATA(some_string) = `ABC`.  " --> TYPE string
 ```
 
-Refrain from using `'`, as it adds a superfluous type conversion and confuses the reader
-whether he's dealing with a `CHAR` or `STRING`:
+Éviter d'utiliser `'`, car il ajoute une conversion de type superflue et trouble le lecteur
+sur le fait de manipuler du `CHAR` ou une `STRING` :
 
 ```ABAP
 " anti-pattern
@@ -1129,14 +1129,14 @@ DATA some_string TYPE string.
 some_string = 'ABC'.
 ```
 
-`|` is generally okay, but cannot be used for `CONSTANTS` and adds needless overhead when specifying a fixed value:
+`|` est généralement bien, mais ne peut pas être utilisé pour des `CONSTANTS` et ajoute trop de verbosité lors de la déclaration d'une valeur fixe :
 
 ```ABAP
 " anti-pattern
 DATA(some_string) = |ABC|.
 ```
 
-### Use | to assemble text
+### Utiliser \| pour assembler du texte
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Strings](#strings) > [Cette section](#use--to-assemble-text)
 
@@ -1144,53 +1144,53 @@ DATA(some_string) = |ABC|.
 DATA(message) = |Received HTTP code { status_code } with message { text }|.
 ```
 
-String templates highlight better what's literal and what's variable,
-especially if you embed multiple variables in a text.
+Les _string templates_ mettent mieux en valeur ce qui est immuable et ce qui est variable,
+particuliprement si vous intégrez plusieurs variables dans un texte.
 
 ```ABAP
 " anti-pattern
 DATA(message) = `Received an unexpected HTTP ` && status_code && ` with message ` && text.
 ```
 
-## Booleans
+## Booléens
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Cette section](#booleans)
 
-### Use Booleans wisely
+### Utiliser les Booléens judicieusement
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Booleans](#booleans) > [Cette section](#use-booleans-wisely)
 
-We often encounter cases where Booleans seem to be a natural choice
+Nous rencontrons souvent des situations où les Booléens semblent être un choix naturel
 
 ```ABAP
 " anti-pattern
 is_archived = abap_true.
 ```
 
-until a change of viewpoint suggests
-we should have chosen an enumeration
+jusqu'à ce qu'un changement de point de vue suggère
+que nous aurions dû opter pour une énumération
 
 ```ABAP
 archiving_status = /clean/archivation_status=>archiving_in_process.
 ```
 
-Generally, Booleans are a bad choice
-to distinguish types of things
-because you will nearly always encounter cases
-that are not exclusively one or the other
+En général, les Booléens sont un mauvais choix
+pour distinguer les types de choses
+parce que vous rencontrerez presque toujours des cases
+qui ne sont pas exclusifs l'un de l'autre
 
 ```ABAP
 assert_true( xsdbool( document->is_archived( ) = abap_true AND
                       document->is_partially_archived( ) = abap_true ) ).
 ```
 
-[Split method instead of Boolean input parameter](#split-method-instead-of-boolean-input-parameter)
-moreover explains why you should always challenge Boolean parameters.
+[Diviser une méthode plutôt que d'utiliser des paramètres booléens](#split-method-instead-of-boolean-input-parameter)
+explique pour devez toujours _challenger_ les paramètres Booléens.
 
 > Voir
 > [1](http://www.beyondcode.org/articles/booleanVariables.html)
 
-### Use ABAP_BOOL for Booleans
+### Utiliser `ABAP_BOOL` pour les Booléens
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Booleans](#booleans) > [Cette section](#use-abap_bool-for-booleans)
 
@@ -1198,22 +1198,22 @@ moreover explains why you should always challenge Boolean parameters.
 DATA has_entries TYPE abap_bool.
 ```
 
-Don't use the generic type `char1`.
-Although it is technically compatible it obscures the fact that we're dealing with a Boolean variable.
+N'utilisez pas le type générique `char1`.
+Bien qu'il soit techniquement compatible, il masque le fait que nous ayons affaire à une variable booléenne.
 
-Also avoid other Boolean types as they often have strange side effects,
-for example `boolean` supports a third value "undefined" that results in subtle programming errors.
+De plus, éviter les autres types Booléens, car ils entraînent souvent des effets secondaires étranges,
+par exemple `boolean` autorise une troisière valeur "undefined" qui peut provoquer de subtiles erreurs.
 
-In some cases you may need a data dictionary element, for example for DynPro fields.
-`abap_bool` cannot be used here because it is defined in the type pool `abap`, not in the data dictionary.
-In this case, resort to `boole_d` or `xfeld`.
-Create your own data element if you need a custom description.
+Dans certains case, vous pouvez avoir besoin d'un élément du dictionnaire de données, par exemple pour un champ de Dynpro.
+`abap_bool` ne peut pas être utilisé ici car il est défini dans le _type pool_ `abap`, pas dans le DDIC.
+Dans ce cas, utilisez `boole_d` ou `xfeld`.
+Créez votre propre élément de données si vous avez besoin d'une description spécifique.
 
-> ABAP may be the one single programming language that does not come with a universal Boolean data type.
-> However, having one is imperative.
-> This recommendation is based on the ABAP Programming Guidelines.
+> L'ABAP est peut-être le seul langage de programmation qui ne propose pas de type Booléen.
+> Cependant, en avoir un est impératif.
+> Cette recommandation est basée sur les _ABAP Programming Guidelines_.
 
-### Use ABAP_TRUE and ABAP_FALSE for comparisons
+### Utiliser `ABAP_TRUE` et `ABAP_FALSE` pour les comparaisons
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Booleans](#booleans) > [Cette section](#use-abap_true-and-abap_false-for-comparisons)
 
@@ -1222,8 +1222,8 @@ has_entries = abap_true.
 IF has_entries = abap_false.
 ```
 
-Don't use the character equivalents `'X'` and `' '` or `space`;
-they make it hard to see that this is a Boolean expression:
+N'utilisez pas les caractères équivalents `'X'` et `' '` ou `space` ;
+il est plus difficile de se rendre compte que l'on traite une expression booléenne :
 
 ```ABAP
 " anti-pattern
@@ -1231,18 +1231,18 @@ has_entries = 'X'.
 IF has_entries = space.
 ```
 
-Avoid comparisons with `INITIAL` - it forces readers to recollect that `abap_bool`'s default is `abap_false`:
+Évitez les comparaisons avec `INITIAL` - cela force le lecteur à se redire que la valeur par défaut d'un `abap_bool` est  `abap_false` :
 
 ```ABAP
 " anti-pattern
 IF has_entries IS NOT INITIAL.
 ```
 
-> ABAP may be the one single programming language that does not come with built-in "constants" for true and false.
-> However, having them is imperative.
-> This recommendation is based on the ABAP Programming Guidelines.
+> L'ABAP est peut-être le seul langage de programmation qui n'a pas de constantes pour _true_ ou _false_.
+> Cependant, en avoir est impératif.
+> Cette recommandation est basée sur les _ABAP Programming Guidelines_.
 
-### Use XSDBOOL to set Boolean variables
+### Utiliser `XSDBOOL` pour valoriser des variables booléennes
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Booleans](#booleans) > [Cette section](#use-xsdbool-to-set-boolean-variables)
 
@@ -1250,7 +1250,7 @@ IF has_entries IS NOT INITIAL.
 DATA(has_entries) = xsdbool( line IS NOT INITIAL ).
 ```
 
-The equivalent `IF`-`THEN`-`ELSE` is much longer for nothing:
+L'équivalent `IF`-`THEN`-`ELSE` est plus long, inutilement :
 
 ```ABAP
 " anti-pattern
@@ -1261,18 +1261,18 @@ ELSE.
 ENDIF.
 ```
 
-`xsdbool` is the best method for our purpose, as it directly produces a `char1`,
-which fits our boolean type `abap_bool` best.
-The equivalent functions `boolc` and `boolx` produce different types
-and add an unnecessary implicit type conversion.
+`xsdbool` est la meilleure méthode pour notre objectif, car elle produit un `char1`,
+qui correspond le mieux à notre `abap_bool`.
+Les fonctions équivalentes `boolc` et `boolx` produisent des types différents
+et ajoutent une conversion implicite inutile.
 
-We agree that the name `xsdbool` is unlucky and misleading;
-after all, we're not at all interested in the "XML Schema Definition" parts that the "xsd" prefix suggests.
+Nous sommes d'accord que le nom `xsdbool` est malheureux et peut explicite ;
+après tout, nous nous fichons de l'_XML Schema Definition_ suggérée par le préfixe "xsd".
 
-A possible alternative to `xsdbool` is the `COND` ternary form.
-Its syntax is intuitive, but a little longer because it needlessly repeats the `THEN abap_true` segment,
-and requires knowledge of the implicit default value `abap_false` -
-which is why we suggest it only as secondary solution.
+Une alternative possible à `xsdbool` est la forme ternaire `COND`.
+Sa syntaxe est intuitive, maisun peu plus longue car elle répète inutilement la partie `THEN abap_true`,
+et requiert la connaissance de la valeur par défaut implicite `abap_false` -
+c'est la raison pour laquelle nous ne le suggérons qu'en solution secondaire.
 
 ```ABAP
 DATA(has_entries) = COND abap_bool( WHEN line IS NOT INITIAL THEN abap_true ).
