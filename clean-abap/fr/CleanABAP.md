@@ -1,5 +1,7 @@
 1. TO BE TRANSLATED / À TRADUIRE
 2. À Adapter
+3. À corriger
+4. À relire encore
 
 # L'ABAP propre
 
@@ -1282,7 +1284,7 @@ DATA(has_entries) = COND abap_bool( WHEN line IS NOT INITIAL THEN abap_true ).
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Cette section](#conditions)
 
-### Try to make conditions positive
+### Essayer de rendre les conditions positives
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Conditions](#conditions) > [Cette section](#try-to-make-conditions-positive)
 
@@ -1290,15 +1292,15 @@ DATA(has_entries) = COND abap_bool( WHEN line IS NOT INITIAL THEN abap_true ).
 IF has_entries = abap_true.
 ```
 
-For comparison, see how hard to understand the same statement gets by reversing it:
+Voyez combien il devient difficile de comprndre la même instruction inversée :
 
 ```ABAP
 " anti-pattern
 IF has_no_entries = abap_false.
 ```
 
-The "try" in the section title means you shouldn't force this
-up to the point where you end up with something like [empty IF branches](#no-empty-if-branches):
+Le "essayer" dans le titre signifie que vous ne devrait pas forcer
+ce trait au point d'avoir des [branches vides](#no-empty-if-branches) :
 
 ```ABAP
 " anti-pattern
@@ -1310,7 +1312,7 @@ ENDIF.
 
 > Voir _Chapter 17: Smells and Heuristics: G29: Avoid Negative Conditionals_ of [Robert C. Martin's _Clean Code_].
 
-### Prefer IS NOT to NOT IS
+### Préférer `IS NOT` à `NOT IS`
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Conditions](#conditions) > [Cette section](#prefer-is-not-to-not-is)
 
@@ -1320,9 +1322,9 @@ IF variable NP 'TODO*'.
 IF variable <> 42.
 ```
 
-Negation is logically equivalent
-but requires a "mental turnaround"
-that makes it harder to understand.
+Le `NOT...` donne le même résultat mais
+requiert un effort mental supplémentaire
+qui rend la compréhension plus difficile.
 
 ```ABAP
 " anti-pattern
@@ -1331,13 +1333,12 @@ IF NOT variable CP 'TODO*'.
 IF NOT variable = 42.
 ```
 
-> A more specific variant of
-[Try to make conditions positive](#try-to-make-conditions-positive).
-Also as described in the section
-[Alternative Language Constructs](https://help.sap.com/doc/abapdocu_753_index_htm/7.53/en-US/index.htm?file=abenalternative_langu_guidl.htm)
-in the ABAP programming guidelines.
+> Voir
+[Essayer de rendre les conditions positives](#try-to-make-conditions-positive).
+et
+[Constructions alternatives de langage](https://help.sap.com/doc/abapdocu_753_index_htm/7.53/en-US/index.htm?file=abenalternative_langu_guidl.htm).
 
-### Consider decomposing complex conditions
+### Envisager de décomposer les conditions complexes
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Conditions](#conditions) > [Cette section](#consider-decomposing-complex-conditions)
 
@@ -1372,7 +1373,8 @@ IF ( example_a IS NOT INITIAL OR
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Conditions](#conditions) > [Cette section](#consider-extracting-complex-conditions)
 
-It's nearly always a good idea to extract complex conditions to methods of their own:
+C'est presque toujours une bonne idée d'exploser une condition
+complexe en une ou plusieurs méthodes propres :
 
 ```ABAP
 IF is_provided( example ).
@@ -1386,11 +1388,11 @@ METHOD is_provided.
 ENDMETHOD.
 ```
 
-## Ifs
+## Les `IF`
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Cette section](#ifs)
 
-### No empty IF branches
+### Pas de branche vide
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Ifs](#ifs) > [Cette section](#no-empty-if-branches)
 
@@ -1400,7 +1402,7 @@ IF has_entries = abap_false.
 ENDIF.
 ```
 
-is shorter and clearer than
+est plus courte et plus clair que 
 
 ```ABAP
 " anti-pattern
@@ -1410,7 +1412,7 @@ ELSE.
 ENDIF.
 ```
 
-### Prefer CASE to ELSE IF for multiple alternative conditions
+### Préférer `CASE` à `ELSE IF` pour de multiples conditions alternatives
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Ifs](#ifs) > [Cette section](#prefer-case-to-else-if-for-multiple-alternative-conditions)
 
@@ -1425,11 +1427,11 @@ CASE type.
 ENDCASE.
 ```
 
-`CASE` makes it easy to see a set of alternatives that exclude each other.
-It can be faster than a series of `IF`s because it can translate to a different microprocessor command
-instead of a series of subsequently evaluated conditions.
-You can introduce new cases quickly, without having to repeat the discerning variable over and over again.
-The statement even prevents some errors that can occur when accidentally nesting the `IF`-`ELSEIF`s.
+Un `CASE` permet d'appréhender rapidement un ensemble d'alternatives mutuellement exclusives.
+Il peut être plus rapide qu'une série de `IF` car il est évalué par une commande microprocesseur dédiée
+plutôt que par une série de conditions évaluées séquentiellement.
+Vous pouvez ajouter de nouveaux cas facilement, sans avoir à répéter les variables discriminantes.
+L'instruction protège même d'erreurs qui pourraient subvenir lors d'imbrication accidentelle de `IF` - `ELSEIF`.
 
 ```ABAP
 " anti-pattern
@@ -1442,7 +1444,7 @@ ELSE.
 ENDIF.
 ```
 
-### Keep the nesting depth low
+### Garder un faible niveau d'imbrication
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Ifs](#ifs) > [Cette section](#keep-the-nesting-depth-low)
 
@@ -1460,17 +1462,18 @@ ELSE.
 ENDIF.
 ```
 
-Nested `IF`s get hard to understand very quickly and require an exponential number of test cases for complete coverage.
+Les `IF` imbriqués sont difficilement à comprendre rapidement et require
+un nombre exponentiel de cas de test pour une couverture (de test) complète.
 
-Decision trees can usually be taken apart by forming sub-methods and introducing boolean helper variables.
+Les arbres de décision peuvent généralement être séparés en formant des sous-méthodes et en introduisant des variables booléennes auxiliaires.
 
-Other cases can be simplified by merging IFs, such as
+D'autres cas peuvent être simplifiés en fusionnant les `IF` :
 
 ```ABAP
 IF <this> AND <that>.
 ```
 
-instead of the needlessly nested
+à la place de l'inutilement imbriqué
 
 ```ABAP
 " anti-pattern
@@ -1478,11 +1481,11 @@ IF <this>.
   IF <that>.
 ```
 
-## Regular expressions
+## Expressions régulières
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Cette section](#regular-expressions)
 
-### Prefer simpler methods to regular expressions
+### Préférer des méthodes plus simples que les expressions régulières
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Regular expressions](#regular-expressions) > [Cette section](#prefer-simpler-methods-to-regular-expressions)
 
@@ -1494,14 +1497,15 @@ WHILE contains( val = input  sub = 'abc' ).
 " WHILE contains( val = input  regex = 'abc' ).
 ```
 
-Regular expressions become hard to understand very quickly.
-Simple cases are usually easier without them.
+Les expressions régulières peuvent rapidement devenir très difficiles à comprendre.
+Les cas simples sont généralement plus facile à traiter autrement.
 
-Regular expressions also usually consume more memory and processing time
-because they need to be parsed into an expression tree and compiled at runtime into an executable matcher.
-Simple solutions may do with a straight-forward loop and a temporary variable.
+Les expressions régulières consomment souvent plus de mémoire et de temps de traitement
+car elles ont besoin d'être _parsées_ en un _arbre d'expressions_ et compilées à l'exécution en un
+_matcher_ exécutable.
+Il est généralement plus pratique d'utiliser des boucles et des variables temporaires.
 
-### Prefer basis checks to regular expressions
+### Préférer des contrôles basiques plutôt que des expressions régulières
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Regular expressions](#regular-expressions) > [Cette section](#prefer-basis-checks-to-regular-expressions)
 
@@ -1513,7 +1517,7 @@ CALL FUNCTION 'SEO_CLIF_CHECK_NAME'
     ...
 ```
 
-instead of reinventing things
+au lieu de réinventer la roue
 
 ```ABAP
 " anti-pattern
@@ -1521,11 +1525,11 @@ DATA(is_valid) = matches( val     = class_name
                           pattern = '[A-Z][A-Z0-9_]{0,29}' ).
 ```
 
-> There seems to be a natural tendency to turn blind to the Don't-Repeat-Yourself (DRY) principle
-> when there are regular expressions around,
-> compare section _Chapter 17: Smells and Heuristics: General: G5: Duplication_ in [Robert C. Martin's _Clean Code_].
+> Il semble y avoir une tendance naturelle à ignorer le principe _DRY_ (_Don't-Repeat-Yourself_) « ne vous répétez pas »
+> lorsque les expressions régulières sont impliquées,
+> voir _Chapter 17: Smells and Heuristics: General: G5: Duplication_ in [Robert C. Martin's _Clean Code_].
 
-### Consider assembling complex regular expressions
+### Envisager d'assembler les expressions régulières complexes
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Regular expressions](#regular-expressions) > [Cette section](#consider-assembling-complex-regular-expressions)
 
@@ -1535,24 +1539,25 @@ CONSTANTS interface_name TYPE string VALUE `IF\_.*`.
 DATA(object_name) = |{ class_name }\|{ interface_name }|.
 ```
 
-Some complex regular expressions become easier
-when you demonstrate to the reader how they are built up from more elementary pieces.
+Certaines expressions régulières deviennent plus simples
+lorsque vous expliquez au lecteur comment elles sont construites à partir d'autres éléments.
 
 ## Classes
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Cette section](#classes)
 
-### Classes: Object orientation
+### Classes : orientation objet
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Classes](#classes) > [Cette section](#classes-object-orientation)
 
-#### Prefer objects to static classes
+#### Préférer des objets aux classes statiques
 
 > [ABAP propre](#clean-abap) > [Contenu](#content) > [Classes](#classes) > [Classes: Object orientation](#classes-object-orientation) > [Cette section](#prefer-objects-to-static-classes)
 
-Static classes give up all advantages gained by object orientation in the first place.
-They especially make it nearly impossible to replace productive dependencies with test doubles in unit tests.
+Les classes statiques abandonnent tous les avantages apportés par l'orientation objet.
+En particulier, elles empêchent pratiquement de remplacer les dépendances productives dans les tests unitaires.
 
+Si vous vous posez la question
 If you think about whether to make a class or method static, the answer will nearly always be: no.
 
 One accepted exception to this rule are plain type utils classes.
